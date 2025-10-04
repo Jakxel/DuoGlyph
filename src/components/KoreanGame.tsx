@@ -123,8 +123,9 @@ const KoreanGame: React.FC = () => {
       
 
       <div style={{ marginTop: "2rem" }}>
-        <HintButton hint={currentSymbol.romanization} inputRef={inputRef} />
         <Button onClick={() => navigate(-1)}>Exit</Button>
+        <HintButton hint={currentSymbol.romanization} inputRef={inputRef} />
+        
       </div>
     </div>
   );
