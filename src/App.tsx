@@ -26,6 +26,7 @@ function App() {
     <div className="display">
       <h1>DuoGlyph {language}</h1>
       <Routes>
+        <Route path="/" element={<Menu />} />
         <Route path="/Menu" element={<Menu />} />
         <Route path="/JapaneseMenu" element={<JapaneseMenu />} />
         <Route path="/JapaneseGame" element={<JapaneseGame />} />
