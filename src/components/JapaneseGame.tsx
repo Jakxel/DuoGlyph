@@ -38,6 +38,11 @@ const JapaneseGame: React.FC = () => {
     }
   }, [group, script]);
 
+    // Mantener el foco en el input
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [currentSymbol]);
+
   // Función para obtener símbolo aleatorio
   const getRandomSymbol = () => {
     return filteredData[Math.floor(Math.random() * filteredData.length)];
@@ -102,6 +107,7 @@ const JapaneseGame: React.FC = () => {
 
       <input
         type="text"
+        ref={inputRef}
         onKeyDown={handleKeyDown}
         style={{ opacity: 0, height: 0, width: 0 }}
         autoFocus

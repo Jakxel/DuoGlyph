@@ -8,11 +8,12 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const buttonStyles: Record<string, React.CSSProperties> = {
     primary: {
-        backgroundColor: '#2563eb',
+        backgroundColor: '#ee4545ff',
         color: '#fff',
+        width: "6rem",
         border: 'none',
         borderRadius: '4px',
-        fontSize:"25px",
+        fontSize: "25px",
         padding: '8px 16px',
         fontWeight: 600,
         cursor: 'pointer',
@@ -23,18 +24,18 @@ const buttonStyles: Record<string, React.CSSProperties> = {
         backgroundColor: '#e5e7eb',
         color: '#1f2937',
         border: 'none',
+        width: "6rem",
         borderRadius: '4px',
         padding: '8px 16px',
-        fontSize:"25px",
+        fontSize: "25px",
         fontWeight: 600,
         cursor: 'pointer',
         margin: '10px',
         transition: 'background 0.2s',
     },
     selected: {
-        boxShadow: '0 0 0 4px #ff8811ff',
+        boxShadow: '0 0 0 4px #ffc400ff',
         outline: 'none',
-
     },
 };
 
@@ -49,7 +50,7 @@ const Button: React.FC<ButtonProps> = ({
 
     const getHoverStyle = () => {
         if (variant === 'primary' && isHovered) {
-            return { backgroundColor: '#1d4ed8' };
+            return { backgroundColor: '#a20000ff' };
         }
         if (variant === 'secondary' && isHovered) {
             return { backgroundColor: '#d1d5db' };

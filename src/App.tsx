@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import Menu from "./components/Menu";
 import "./style/App.css";
+import Navbar from "./components/Navbar";
 import JapaneseMenu from "./components/JapaneseMenu";
 import KoreanGame from "./components/KoreanGame";
 import KoreanMenu from "./components/KoreanMenu";
@@ -23,7 +24,10 @@ function App() {
   }, [location.pathname]);
 
   return (
+  <>
+  <Navbar/>
     <div className="display">
+      
       <h1>DuoGlyph {language}</h1>
       <Routes>
         <Route path="/" element={<Menu />} />
@@ -34,6 +38,7 @@ function App() {
         <Route path="/KoreanMenu" element={<KoreanMenu />} />
       </Routes>
     </div>
+  </>
   );
 }
 export default App;
