@@ -4,19 +4,19 @@ import Button from "./button";
 
 type HintButtonProps = {
   hint: string;
-  inputRef: React.RefObject<HTMLInputElement | null>; // Recibe la referencia del input del juego
+  inputRef: React.RefObject<HTMLInputElement | null>; 
 };
 const HintButton: React.FC<HintButtonProps> = ({ hint, inputRef }) => {
   const [showHint, setShowHint] = useState(false);
 
   const handleMouseDown = () => {
     setShowHint(true);
-    inputRef.current?.focus(); // Vuelve a enfocar el input
+    inputRef.current?.focus(); 
   };
 
   const handleMouseUp = () => {
     setShowHint(false);
-    inputRef.current?.focus(); // Mantener el focus
+    inputRef.current?.focus();
   };
 
   return (

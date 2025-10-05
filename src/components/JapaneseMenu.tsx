@@ -14,6 +14,13 @@ export default function JapaneseMenu() {
             alert("Please select both script and group.");
         }
     };
+     const handleStudy = () => {
+        if (group) {
+            navigate("/JapaneseStudy", { state: {script, group } });
+        } else {
+            alert("Please select a group!");
+        }
+    };
 
     return (
         <div>
@@ -33,7 +40,10 @@ export default function JapaneseMenu() {
                 <Button variant="primary" onClick={handleStart}>Start</Button>
             </div>
             <div>
-                <Button variant="primary" onClick={() => navigate('/menu')}> Go to Menu </Button>
+                <Button variant="primary" onClick={() => navigate('/menu')}> Languages</Button>
+                <Button className="baseStyle" variant="secondary2" onClick={handleStudy}>
+                    Study
+                </Button>
             </div>
         </div>
     );

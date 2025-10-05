@@ -2,20 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { koreanSymbols, type HangulSymbol } from "../data/korean";
 import HintButton from "./HintButton";
+import "../style/KoreanGame.css"
 import Button from "./button";
 
 const KoreanGame: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Recuperar el grupo enviado desde el menú
   const { group } =
     (location.state as { group: HangulSymbol["group"] }) || { group: "vowel" };
 
-  // Crear el ref correctamente
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Filtrar los símbolos según el grupo
   const filteredData = koreanSymbols.filter((item) => item.group === group);
 
   const [currentSymbol, setCurrentSymbol] = useState<HangulSymbol | null>(null);
@@ -23,7 +21,6 @@ const KoreanGame: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
 
-  // Inicializar el primer símbolo
   useEffect(() => {
     if (filteredData.length > 0) {
       const random = getRandomSymbol();
@@ -34,7 +31,6 @@ const KoreanGame: React.FC = () => {
     }
   }, [group]);
 
-  // Mantener el foco en el input
   useEffect(() => {
     inputRef.current?.focus();
   }, [currentSymbol]);
@@ -80,7 +76,7 @@ const KoreanGame: React.FC = () => {
 
   if (filteredData.length === 0) {
     return (
-      <div style={{ textAlign: "center", padding: "0" }}>
+      <div className="korean-game__empty">
         <h2>No symbols found for this group.</h2>
         <Button onClick={() => navigate(-1)}>Go Back</Button>
       </div>
@@ -90,42 +86,45 @@ const KoreanGame: React.FC = () => {
   if (!currentSymbol) return <p>Loading...</p>;
 
   return (
-    <div style={{ textAlign: "center", marginTop: "0" }}>
-      <h2>Hangul | Group: {group}</h2>
+    <div className="korean-game">
+      <h2 className="korean-game__title">Hangul | Group: {group}</h2>
 
-      <div style={{ fontSize: "6rem" }}>{currentSymbol.symbol}</div>
+      <div className="korean-game__symbol">{currentSymbol.symbol}</div>
 
       <input
         type="text"
         ref={inputRef}
         onKeyDown={handleKeyDown}
-        style={{ opacity: 0, height: 0, width: 0 }}
+        className="korean-game__input"
         autoFocus
       />
 
-      <div style={{ fontSize: "2rem", marginTop: "0" }}>
+      <div className="korean-game__romanization">
         {currentSymbol.romanization.split("").map((letter, index) => {
           const userLetter = inputLetters[index];
-          let color = "black";
+          let colorClass = "";
 
           if (userLetter !== undefined) {
-            color = userLetter === letter.toLowerCase() ? "green" : "red";
+            colorClass =
+              userLetter === letter.toLowerCase()
+                ? "korean-game__letter--correct"
+                : "korean-game__letter--wrong";
           }
 
           return (
-            <span key={index} style={{ color, marginRight: "8px" }}>
+            <span
+              key={index}
+              className={`korean-game__letter ${colorClass}`}
+            >
               {userLetter ?? "_"}
             </span>
           );
         })}
       </div>
 
-      
-
-      <div style={{ marginTop: "2rem" }}>
+      <div className="korean-game__actions">
         <Button onClick={() => navigate(-1)}>Exit</Button>
         <HintButton hint={currentSymbol.romanization} inputRef={inputRef} />
-        
       </div>
     </div>
   );

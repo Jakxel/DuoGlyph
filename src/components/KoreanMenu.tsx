@@ -13,6 +13,13 @@ function KoreanMenu() {
             alert("Please select a group!");
         }
     };
+     const handleStudy = () => {
+        if (group) {
+            navigate("/KoreanStudy", { state: { group } });
+        } else {
+            alert("Please select a group!");
+        }
+    };
 
     return (
         <div>
@@ -60,6 +67,9 @@ function KoreanMenu() {
                     onClick={() => navigate("/menu")}
                 >
                     Go to Menu
+                </Button>
+                <Button className="baseStyle" variant="secondary2" onClick={handleStudy}>
+                    Study
                 </Button>
             </div>
         </div>

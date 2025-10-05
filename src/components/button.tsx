@@ -2,7 +2,7 @@ import React from 'react';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     children: React.ReactNode;
-    variant?: 'primary' | 'secondary';
+    variant?: 'primary' | 'secondary' | 'secondary2';
     selected?: boolean;
 };
 
@@ -23,6 +23,19 @@ const buttonStyles: Record<string, React.CSSProperties> = {
     secondary: {
         backgroundColor: '#e5e7eb',
         color: '#1f2937',
+        border: 'none',
+        width: "6rem",
+        borderRadius: '4px',
+        padding: '8px 16px',
+        fontSize: "25px",
+        fontWeight: 600,
+        cursor: 'pointer',
+        margin: '10px',
+        transition: 'background 0.2s',
+    },
+    secondary2: {
+        backgroundColor: '#ffc653ff',
+        color: '#ffffffff',
         border: 'none',
         width: "6rem",
         borderRadius: '4px',
