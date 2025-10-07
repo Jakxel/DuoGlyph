@@ -34,7 +34,7 @@ export const koreanSymbols: HangulSymbol[] = [
   { symbol: "ㄱ", romanization: "g", group: "plain" },
   { symbol: "ㄴ", romanization: "n", group: "plain" },
   { symbol: "ㄷ", romanization: "d", group: "plain" },
-  { symbol: "ㄹ", romanization: "r/l", group: "plain" },
+  { symbol: "ㄹ", romanization: "rl", group: "plain" },
   { symbol: "ㅁ", romanization: "m", group: "plain" },
   { symbol: "ㅂ", romanization: "b", group: "plain" },
   { symbol: "ㅅ", romanization: "s", group: "plain" },
