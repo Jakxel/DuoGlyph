@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { japaneseSymbols, type SymbolData } from "../data/japanese";
 import HintButton from "./HintButton";
 import Button from "./button";
+import "../style/JapaneseGame.css";
 
 const JapaneseGame: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +50,6 @@ const JapaneseGame: React.FC = () => {
     return filteredData[Math.floor(Math.random() * filteredData.length)];
   };
 
-  // Activar foco solo en móviles tras interacción del usuario
   const handleActivateKeyboard = () => {
     inputRef.current?.focus();
     setIsFocused(true);
@@ -86,7 +86,7 @@ const JapaneseGame: React.FC = () => {
 
   if (filteredData.length === 0) {
     return (
-      <div style={{ textAlign: "center", padding: "1rem" }}>
+      <div className="game-container">
         <h2>No symbols found for this group and script.</h2>
         <Button onClick={() => navigate(-1)}>Go Back</Button>
       </div>
@@ -96,64 +96,43 @@ const JapaneseGame: React.FC = () => {
   if (!currentSymbol) return <p>Loading...</p>;
 
   return (
-    <div style={{ textAlign: "center", marginTop: "1rem" }}>
+    <div className="game-container">
       <h2>
         Script: {script} | Group: {group}
       </h2>
 
-      <div style={{ fontSize: "4rem", margin: "0.5rem 0" }}>
-        {currentSymbol.symbol}
-      </div>
+      <div className="symbol-display">{currentSymbol.symbol}</div>
 
-      {/* Input oculto pero enfocable */}
       <input
         type="text"
         ref={inputRef}
         onKeyDown={handleKeyDown}
-        style={{
-          position: "absolute",
-          top: "-9999px",
-          opacity: 0,
-        }}
+        className="hidden-input"
       />
 
-      {/* ✅ Botón visible SOLO en móviles */}
+      {/* Botón visible solo en móviles */}
       {isMobile && !isFocused && (
-        <button
-          onClick={handleActivateKeyboard}
-          style={{
-            backgroundColor: "#007aff",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            padding: "0.8rem 1.5rem",
-            fontSize: "1rem",
-            cursor: "pointer",
-            marginBottom: "1rem",
-          }}
-        >
+        <button onClick={handleActivateKeyboard} className="mobile-keyboard-btn">
           📱 Activar teclado
         </button>
       )}
 
-      <div style={{ fontSize: "2rem", marginTop: "1rem" }}>
+      <div className="romaji-display">
         {currentSymbol.romaji.split("").map((letter, index) => {
           const userLetter = inputLetters[index];
-          let color = "black";
-
+          let colorClass = "";
           if (userLetter !== undefined) {
-            color = userLetter === letter.toLowerCase() ? "green" : "red";
+            colorClass = userLetter === letter.toLowerCase() ? "correct" : "wrong";
           }
-
           return (
-            <span key={index} style={{ color, marginRight: "8px" }}>
+            <span key={index} className={`romaji-letter ${colorClass}`}>
               {userLetter ?? "_"}
             </span>
           );
         })}
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
+      <div className="game-buttons">
         <Button onClick={() => navigate(-1)}>Exit</Button>
         <HintButton hint={currentSymbol.romaji} inputRef={inputRef} />
       </div>
