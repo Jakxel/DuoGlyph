@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { japaneseSymbols, type SymbolData } from "../data/japanese";
 import HintButton from "./HintButton";
 import Button from "./button";
-import "../style/JapaneseGame.css"
+import "../style/JapaneseGames.css"
 
 const JapaneseGame: React.FC = () => {
   const navigate = useNavigate();
