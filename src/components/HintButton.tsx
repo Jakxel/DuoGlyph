@@ -36,7 +36,7 @@ const HintButton: React.FC<HintButtonProps> = ({ hint, inputRef }) => {
         onTouchStart={handleMouseDown}
         onTouchEnd={handleMouseUp}
       >
-        {isSmall ? "Keyboard/hint" : showHint ? hint : "Hint"}
+        {isSmall ? "Keyboard" : showHint ? hint : "Hint"}
       </Button>
     </div>
   );
