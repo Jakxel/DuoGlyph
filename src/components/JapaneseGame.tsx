@@ -91,52 +91,125 @@ const JapaneseGame: React.FC = () => {
   if (!currentSymbol) return <p>Loading...</p>;
 
   return (
-    <div className="japanese-game">
-      <h2 className="japanese-game__header">
-        Script: {script} | Group: {group}
+    <div
+      style={{
+      maxWidth: "400px",
+      borderRadius: "18px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      fontFamily: "'Segoe UI', 'Noto Sans JP', Arial, sans-serif",
+      padding: "32px 24px",
+      }}
+    >
+      <h2
+      style={{
+        fontSize: "1.5rem",
+        marginBottom: "24px",
+        color: "#fffdfd",
+        textAlign: "center",
+        fontWeight: 600,
+      }}
+      >
+      Script: {script} | Group: {group}
       </h2>
 
-      <div className="japanese-game__symbol">{currentSymbol.symbol}</div>
+      <div
+      style={{
+        fontSize: "4rem",
+        marginBottom: "24px",
+        color: "#ffffff",
+        fontWeight: "bold",
+        letterSpacing: "2px",
+        userSelect: "none",
+      }}
+      >
+      {currentSymbol.symbol}
+      </div>
 
       <input
-        ref={inputRef}
-        type="text"
-        className="japanese-game__input"
-        autoFocus
-        autoComplete="off"
-        inputMode="text"
-        onKeyDown={handleKeyDown}
-        value={inputLetters.join("")}
-        readOnly
-        tabIndex={-1}
-        aria-label="Type the romaji for the symbol"
+      ref={inputRef}
+      type="text"
+      style={{
+        opacity: 0,
+        position: "absolute",
+        pointerEvents: "none",
+        height: 0,
+        width: 0,
+      }}
+      autoFocus
+      autoComplete="off"
+      inputMode="text"
+      onKeyDown={handleKeyDown}
+      value={inputLetters.join("")}
+      readOnly
+      tabIndex={-1}
+      aria-label="Type the romaji for the symbol"
       />
 
-      <div className="japanese-game__romaji">
-        {currentSymbol.romaji.split("").map((letter, index) => {
-          const userLetter = inputLetters[index];
-          let colorClass = "";
+      <div
+      style={{
+        display: "flex",
+        gap: "10px",
+        margin: "24px 0",
+        fontSize: "2rem",
+        letterSpacing: "2px",
+        justifyContent: "center",
+      }}
+      >
+      {currentSymbol.romaji.split("").map((letter, index) => {
+        const userLetter = inputLetters[index];
+        let colorStyle = {};
 
-          if (userLetter !== undefined) {
-            colorClass =
-              userLetter === letter.toLowerCase()
-                ? "japanese-game__letter--correct"
-                : "japanese-game__letter--wrong";
-          }
+        if (userLetter !== undefined) {
+        colorStyle =
+          userLetter === letter.toLowerCase()
+          ? {
+            color: "#219150",
+            borderBottom: "5px solid #274734",
+            }
+          : {
+            color: "#d90429",
+            borderBottom: "5px solid #d90429",
+            };
+        } else {
+        colorStyle = {
+          color: "#22223b",
+          borderBottom: "5px solid #000000",
+        };
+        }
 
-          return (
-            <span
-              key={index}
-              className={`japanese-game__letter ${colorClass}`}
-            >
-              {userLetter ?? "_"}
-            </span>
-          );
-        })}
+        return (
+        <span
+          key={index}
+          style={{
+          display: "inline-block",
+          width: "32px",
+          height: "48px",
+          lineHeight: "48px",
+          textAlign: "center",
+          fontSize: "2rem",
+          fontWeight: 500,
+          borderRadius: "6px 6px 0 0",
+          transition: "background 0.2s, color 0.2s",
+          ...colorStyle,
+          }}
+        >
+          {userLetter ?? "_"}
+        </span>
+        );
+      })}
       </div>
-      <div className="japanese-game__actions">
-        <Button onClick={() => navigate(-1)}>Exit</Button>
-        <HintButton hint={currentSymbol.romaji} inputRef={inputRef} />
+      <div
+      style={{
+        display: "flex",
+        gap: "16px",
+        marginTop: "24px",
+        justifyContent: "center",
+      }}
+      >
+      <Button onClick={() => navigate(-1)}>Exit</Button>
+      <HintButton hint={currentSymbol.romaji} inputRef={inputRef} />
       </div>
     </div>
   );
