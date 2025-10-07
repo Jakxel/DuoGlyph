@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { japaneseSymbols, type SymbolData } from "../data/japanese";
+import "../style/JapaneseGames.css"
 import HintButton from "./HintButton";
 import Button from "./button";
-import "../style/JapaneseGames.css"
 
 const JapaneseGame: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const JapaneseGame: React.FC = () => {
   const [currentSymbol, setCurrentSymbol] = useState<SymbolData | null>(null);
   const [inputLetters, setInputLetters] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
+  const [,setStatus] = useState<"idle" | "wrong" | "correct">("idle");
 
   useEffect(() => {
     if (filteredData.length > 0) {
@@ -81,7 +81,7 @@ const JapaneseGame: React.FC = () => {
 
   if (filteredData.length === 0) {
     return (
-      <div className="japanese-game__empty">
+      <div className="japanese-game__no-symbols">
         <h2>No symbols found for this group and script.</h2>
         <Button onClick={() => navigate(-1)}>Go Back</Button>
       </div>
@@ -92,33 +92,43 @@ const JapaneseGame: React.FC = () => {
 
   return (
     <div className="japanese-game">
-      <h2 className="japanese-game__title">
+      <h2 className="japanese-game__header">
         Script: {script} | Group: {group}
       </h2>
 
       <div className="japanese-game__symbol">{currentSymbol.symbol}</div>
 
       <input
-        type="text"
         ref={inputRef}
-        onKeyDown={handleKeyDown}
+        type="text"
         className="japanese-game__input"
         autoFocus
+        autoComplete="off"
+        inputMode="text"
+        onKeyDown={handleKeyDown}
+        value={inputLetters.join("")}
+        readOnly
+        tabIndex={-1}
+        aria-label="Type the romaji for the symbol"
       />
 
-      <div className="japanese-game__romanization">
+      <div className="japanese-game__romaji">
         {currentSymbol.romaji.split("").map((letter, index) => {
           const userLetter = inputLetters[index];
-          let letterClass = "japanese-game__letter";
+          let colorClass = "";
 
           if (userLetter !== undefined) {
-            letterClass += userLetter === letter.toLowerCase()
-              ? " japanese-game__letter--correct"
-              : " japanese-game__letter--wrong";
+            colorClass =
+              userLetter === letter.toLowerCase()
+                ? "japanese-game__letter--correct"
+                : "japanese-game__letter--wrong";
           }
 
           return (
-            <span key={index} className={letterClass}>
+            <span
+              key={index}
+              className={`japanese-game__letter ${colorClass}`}
+            >
               {userLetter ?? "_"}
             </span>
           );
@@ -131,5 +141,4 @@ const JapaneseGame: React.FC = () => {
     </div>
   );
 };
-
 export default JapaneseGame;
