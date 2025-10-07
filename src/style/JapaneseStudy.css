@@ -1,6 +1,7 @@
 .study-container {
   text-align: center;
   padding: 1.5rem;
+  transition: 5s ease-in-out;
 }
 
 .study-container h2 {
@@ -48,39 +49,10 @@
   color: #bbb;
 }
 
-@media (max-width: 768px) {
-  .study-container {
-    padding: 1rem;
-    margin-top: 1rem;
-  }
 
-  .study-container h2 {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-  }
 
+@media (max-width: 400px) {
   .study-grid {
-    grid-template-columns: repeat(auto-fit, minmax(0px, 1fr));
-    gap: 0.6rem;
-    padding: 0.7rem;
-  }
-
-  .study-item {
-    padding: 0.5rem;
-  }
-
-  .study-symbol {
-    font-size: 1.7rem;
-  }
-
-  .study-romaji {
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .study-grid {
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   }
 
   .study-symbol {
@@ -92,11 +64,5 @@
   word-break: keep-all;
   font-size: large;
   text-wrap: balance;
-}
-h2{
-  display:none;
-}
-h1{
-  display: none;
 }
 }

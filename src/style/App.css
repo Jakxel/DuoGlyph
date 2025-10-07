@@ -16,3 +16,13 @@ body, html{
 }
 
 
+
+
+@media (max-width: 400px) {
+.display{
+    align-items: baseline;
+    justify-content: baseline;
+    text-align: center;
+    min-height: 40vh;
+}
+}
