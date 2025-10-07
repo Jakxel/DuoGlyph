@@ -61,11 +61,9 @@
     font-size: 1.6rem;
   }
 }
-@media (max-height: 500px){
-    h2{
-        display: none;
-    }
-    h1 {
+@media (pointer: coarse) and (max-width: 600px) and (orientation: portrait) {
+    .keyboard-visible h1,
+    .keyboard-visible h2 {
         display: none;
     }
 }
