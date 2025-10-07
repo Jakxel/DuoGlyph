@@ -15,6 +15,20 @@ const JapaneseGame: React.FC = () => {
       script: "hiragana",
     };
 
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+useEffect(() => {
+  const initialHeight = window.innerHeight;
+
+  const handleResize = () => {
+    // Si la nueva altura es mucho menor, asumimos que el teclado está visible
+    const isKeyboardOpen = window.innerHeight < initialHeight * 0.75;
+    setKeyboardVisible(isKeyboardOpen);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const filteredData = japaneseSymbols.filter(
@@ -92,9 +106,11 @@ const JapaneseGame: React.FC = () => {
 
   return (
     <div className="japanese-game">
-      <h2 className="japanese-game__title">
-        Script: {script} | Group: {group}
-      </h2>
+      {!keyboardVisible && (
+  <h2 className="japanese-game__title">
+    Script: {script} | Group: {group}
+  </h2>
+)}
 
       <div className="japanese-game__symbol">{currentSymbol.symbol}</div>
 
