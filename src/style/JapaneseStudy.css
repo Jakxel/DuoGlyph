@@ -78,7 +78,7 @@
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 600px) {
   .study-grid {
     grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   }
@@ -93,5 +93,10 @@
   font-size: large;
   text-wrap: balance;
 }
-
+h2{
+  display:none;
+}
+h1{
+  display: none;
+}
 }
