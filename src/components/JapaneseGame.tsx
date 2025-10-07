@@ -3,18 +3,19 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { japaneseSymbols, type SymbolData } from "../data/japanese";
 import HintButton from "./HintButton";
 import Button from "./button";
-import "../style/JapaneseGame.css";
+import "../style/JapaneseGame.css"
 
 const JapaneseGame: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const { group, script } =
     (location.state as { group: SymbolData["group"]; script: SymbolData["script"] }) || {
-      group: "basic",
+      group: "",
       script: "hiragana",
     };
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const filteredData = japaneseSymbols.filter(
     (item) => item.group === group && item.script === script
@@ -24,18 +25,7 @@ const JapaneseGame: React.FC = () => {
   const [inputLetters, setInputLetters] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
-  const [isMobile, setIsMobile] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
 
-  // Detectar si la pantalla es móvil
-  useEffect(() => {
-    const checkWidth = () => setIsMobile(window.innerWidth <= 600);
-    checkWidth();
-    window.addEventListener("resize", checkWidth);
-    return () => window.removeEventListener("resize", checkWidth);
-  }, []);
-
-  // Inicializa el primer símbolo
   useEffect(() => {
     if (filteredData.length > 0) {
       const random = getRandomSymbol();
@@ -46,13 +36,12 @@ const JapaneseGame: React.FC = () => {
     }
   }, [group, script]);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [currentSymbol]);
+
   const getRandomSymbol = () => {
     return filteredData[Math.floor(Math.random() * filteredData.length)];
-  };
-
-  const handleActivateKeyboard = () => {
-    inputRef.current?.focus();
-    setIsFocused(true);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -60,6 +49,7 @@ const JapaneseGame: React.FC = () => {
 
     const expected = currentSymbol.romaji.toLowerCase();
     const letter = e.key.toLowerCase();
+
     if (letter.length !== 1 || !letter.match(/^[a-z]$/)) return;
 
     if (letter === expected[currentIndex]) {
@@ -77,16 +67,21 @@ const JapaneseGame: React.FC = () => {
           setInputLetters([]);
           setCurrentIndex(0);
           setStatus("idle");
-        }, 800);
+        }, 1000);
       }
     } else {
+      const updated = [...inputLetters];
+      updated[currentIndex] = letter;
+      setInputLetters(updated);
       setStatus("wrong");
     }
+
+    e.preventDefault();
   };
 
   if (filteredData.length === 0) {
     return (
-      <div className="game-container">
+      <div className="japanese-game__empty">
         <h2>No symbols found for this group and script.</h2>
         <Button onClick={() => navigate(-1)}>Go Back</Button>
       </div>
@@ -96,43 +91,40 @@ const JapaneseGame: React.FC = () => {
   if (!currentSymbol) return <p>Loading...</p>;
 
   return (
-    <div className="game-container">
-      <h2>
+    <div className="japanese-game">
+      <h2 className="japanese-game__title">
         Script: {script} | Group: {group}
       </h2>
 
-      <div className="symbol-display">{currentSymbol.symbol}</div>
+      <div className="japanese-game__symbol">{currentSymbol.symbol}</div>
 
       <input
         type="text"
         ref={inputRef}
         onKeyDown={handleKeyDown}
-        className="hidden-input"
+        className="japanese-game__input"
+        autoFocus
       />
 
-      {/* Botón visible solo en móviles */}
-      {isMobile && !isFocused && (
-        <button onClick={handleActivateKeyboard} className="mobile-keyboard-btn">
-          📱 Activar teclado
-        </button>
-      )}
-
-      <div className="romaji-display">
+      <div className="japanese-game__romanization">
         {currentSymbol.romaji.split("").map((letter, index) => {
           const userLetter = inputLetters[index];
-          let colorClass = "";
+          let letterClass = "japanese-game__letter";
+
           if (userLetter !== undefined) {
-            colorClass = userLetter === letter.toLowerCase() ? "correct" : "wrong";
+            letterClass += userLetter === letter.toLowerCase()
+              ? " japanese-game__letter--correct"
+              : " japanese-game__letter--wrong";
           }
+
           return (
-            <span key={index} className={`romaji-letter ${colorClass}`}>
+            <span key={index} className={letterClass}>
               {userLetter ?? "_"}
             </span>
           );
         })}
       </div>
-
-      <div className="game-buttons">
+      <div className="japanese-game__actions">
         <Button onClick={() => navigate(-1)}>Exit</Button>
         <HintButton hint={currentSymbol.romaji} inputRef={inputRef} />
       </div>
