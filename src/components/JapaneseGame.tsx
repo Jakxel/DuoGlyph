@@ -137,14 +137,9 @@ const JapaneseGame: React.FC = () => {
         height: 0,
         width: 0,
       }}
-      autoFocus
-      autoComplete="off"
-      inputMode="text"
-      onKeyDown={handleKeyDown}
-      value={inputLetters.join("")}
-      readOnly
-      tabIndex={-1}
-      aria-label="Type the romaji for the symbol"
+        onKeyDown={handleKeyDown}
+        className="korean-game__input"
+        autoFocus
       />
 
       <div
