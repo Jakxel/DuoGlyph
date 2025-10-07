@@ -20,7 +20,6 @@ body, html{
 
 @media (max-width: 500px) {
 .display{
-    align-items: baseline;
     justify-content: baseline;
     text-align: center;
     min-height: 40vh;
