@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { japaneseSymbols, type SymbolData } from "../data/japanese";
-import "../style/JapaneseGames.css"
 import HintButton from "./HintButton";
 import Button from "./button";
+import '../style/JG.css'
 
 const JapaneseGame: React.FC = () => {
   const navigate = useNavigate();

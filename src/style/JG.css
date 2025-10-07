@@ -1,0 +1,95 @@
+.japanese-game {
+    max-width: 400px;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', 'Noto Sans JP', Arial, sans-serif;
+}
+
+.japanese-game__title {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    color: #fffdfd;
+    text-align: center;
+    font-weight: 600;
+}
+
+.japanese-game__symbol {
+    font-size: 4rem;
+    margin-bottom: 24px;
+    color: #ffffff;
+    font-weight: bold;
+    letter-spacing: 2px;
+    user-select: none;
+}
+
+.japanese-game__input {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+}
+
+.japanese-game__romanization {
+    display: flex;
+    gap: 10px;
+    margin: 24px 0;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    justify-content: center;
+}
+
+.japanese-game__letter {
+    display: inline-block;
+    width: 32px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    border-bottom: 5px solid #000000;
+    font-size: 2rem;
+    transition: background 0.2s, color 0.2s;
+    border-radius: 6px 6px 0 0;
+    color: #22223b;
+    font-weight: 500;
+}
+
+.japanese-game__letter--correct {
+    color: #219150;
+    border-bottom: 5px solid #274734;
+}
+
+.japanese-game__letter--wrong {
+    color: #d90429;
+    border-bottom: 5px solid #d90429;
+}
+
+.japanese-game__actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    justify-content: center;
+}
+
+.japanese-game__message {
+    text-align: center;
+    padding: 16px;
+    color: #b71c1c;
+    font-size: 1.1rem;
+}
+
+.japanese-game__empty {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 32px 24px;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    text-align: center;
+    background: #fff;
+}
+
+.japanese-game__empty h2 {
+    color: #d90429;
+    margin-bottom: 24px;
+}
