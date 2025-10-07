@@ -93,15 +93,3 @@
     color: #d90429;
     margin-bottom: 24px;
 }
-
-@media (max-width: 500px) {
-h1, h2 {
-    display:none;
-}
-
-
-.japanese-game__symbol {
-    font-size: 3em;
-    color: #ffffff;
-}
-}

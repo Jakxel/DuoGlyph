@@ -17,11 +17,3 @@ body, html{
 
 
 
-
-@media (max-width: 500px) {
-.display{
-    justify-content: baseline;
-    text-align: center;
-    min-height: 40vh;
-}
-}
