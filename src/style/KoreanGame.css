@@ -1,0 +1,83 @@
+.korean-game {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    color: #fff;
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.korean-game__title {
+    font-size: 1.25rem;
+    margin: 0 0 0.75rem 0;
+    color: #eaeaea;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: block;
+}
+
+.korean-game__symbol {
+    font-size: 5.5rem;
+    line-height: 1;
+    margin: 0.25rem 0 1rem 0;
+    color: #fff;
+    text-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+.korean-game__input {
+    opacity: 0;
+    height: 0;
+    width: 0;
+    position: absolute;
+    left: -9999px;
+}
+
+.korean-game__romanization {
+    font-size: 1.6rem;
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    color: #fff;
+}
+
+.korean-game__letter {
+    min-width: 1.2rem;
+    font-size: 1.6rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.03);
+    display: inline-block;
+    border: none;
+}
+
+.korean-game__letter--correct {
+    color: #0f0;
+    background: rgba(0,255,0,0.06);
+    border: 1px solid rgba(0,255,0,0.12);
+}
+
+.korean-game__letter--wrong {
+    color: #ff6b6b;
+    background: rgba(255,0,0,0.04);
+    border: 1px solid rgba(255,0,0,0.08);
+}
+
+.korean-game__actions {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.korean-game__empty {
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+}
+
+.korean-game__empty h2 {
+    color: #ff6b6b;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+}
