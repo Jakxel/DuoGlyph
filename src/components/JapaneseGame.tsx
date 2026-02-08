@@ -1,225 +1,144 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { japaneseSymbols, type SymbolData } from "../data/japanese";
 import HintButton from "./HintButton";
 import Button from "./button";
+import "../style/JapaneseGame.css"
 
 const JapaneseGame: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const { group, script } =
-    (location.state as { group: SymbolData["group"]; script: SymbolData["script"] }) || {
-      group: "",
-      script: "hiragana",
-    };
+  const { group = "", script = "hiragana" } =
+    (location.state as Partial<Pick<SymbolData, "group" | "script">>) ?? {};
 
-  // ref del input (se pasa al HintButton)
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  // detectar teclado en móvil (cuando la altura del viewport baja)
+  /* ---------------- Keyboard visibility ---------------- */
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+
   useEffect(() => {
     const initialHeight = window.innerHeight;
     const onResize = () => {
-      // si la altura cae a < 75% asumimos teclado visible
       setKeyboardVisible(window.innerHeight < initialHeight * 0.75);
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Filtrar símbolos por grupo y script
-  const filteredData = japaneseSymbols.filter(
-    (item) => item.group === group && item.script === script
+  /* ---------------- Data ---------------- */
+  const filteredData = useMemo(
+    () =>
+      japaneseSymbols.filter(
+        (item) => item.group === group && item.script === script
+      ),
+    [group, script]
   );
 
-  // Helper para elegir símbolo aleatorio (debe estar definido antes del useEffect que lo usa)
-  const getRandomSymbol = () => {
-    if (filteredData.length === 0) return null;
+  const getRandomSymbol = useCallback(() => {
+    if (!filteredData.length) return null;
     return filteredData[Math.floor(Math.random() * filteredData.length)];
-  };
+  }, [filteredData]);
 
+  /* ---------------- Game state ---------------- */
   const [currentSymbol, setCurrentSymbol] = useState<SymbolData | null>(null);
   const [inputLetters, setInputLetters] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
 
-  // Inicializar primer símbolo cuando cambian grupo/script
+  const resetGame = useCallback(() => {
+    setCurrentSymbol(getRandomSymbol());
+    setInputLetters([]);
+    setCurrentIndex(0);
+  }, [getRandomSymbol]);
+
   useEffect(() => {
-    if (filteredData.length > 0) {
-      const random = getRandomSymbol();
-      setCurrentSymbol(random);
-      setInputLetters([]);
-      setCurrentIndex(0);
-      setStatus("idle");
-    } else {
-      setCurrentSymbol(null);
-    }
-  }, [group, script]); // eslint-disable-line
+    if (filteredData.length) resetGame();
+    else setCurrentSymbol(null);
+  }, [filteredData, resetGame]);
 
-  // Mantener el foco en el input cuando cambia el símbolo
   useEffect(() => {
     inputRef.current?.focus();
   }, [currentSymbol]);
 
+  /* ---------------- Input handling ---------------- */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!currentSymbol) return;
 
+    const key = e.key.toLowerCase();
+    if (!/^[a-z]$/.test(key)) return;
+
     const expected = currentSymbol.romaji.toLowerCase();
-    const letter = e.key.toLowerCase();
 
-    if (letter.length !== 1 || !letter.match(/^[a-z]$/)) return;
+    setInputLetters((prev) => {
+      const updated = [...prev];
+      updated[currentIndex] = key;
+      return updated;
+    });
 
-    if (letter === expected[currentIndex]) {
-      const updated = [...inputLetters];
-      updated[currentIndex] = letter;
-      setInputLetters(updated);
-      setCurrentIndex(currentIndex + 1);
-      setStatus("idle");
+    if (key === expected[currentIndex]) {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
 
-      if (currentIndex + 1 === expected.length) {
-        setStatus("correct");
-        setTimeout(() => {
-          const next = getRandomSymbol();
-          setCurrentSymbol(next);
-          setInputLetters([]);
-          setCurrentIndex(0);
-          setStatus("idle");
-        }, 800);
+      if (nextIndex === expected.length) {
+        setTimeout(resetGame, 800);
       }
-    } else {
-      const updated = [...inputLetters];
-      updated[currentIndex] = letter;
-      setInputLetters(updated);
-      setStatus("wrong");
     }
 
     e.preventDefault();
   };
 
-  // ===== Inline styles =====
-  const styles = {
-    container: {
-      textAlign: "center" as const,
-      marginTop: "1rem",
-      padding: "1rem",
-      color: "#fff",
-      fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
-    },
-    noSymbols: {
-      textAlign: "center" as const,
-      padding: "10px",
-      color: "#fff",
-    },
-    header: {
-      fontSize: "1.25rem",
-      margin: "0 0 0.75rem 0",
-      color: "#eaeaea",
-      display: keyboardVisible ? "none" : "block",
-      transition: "opacity 0.2s ease, transform 0.2s ease",
-    },
-    symbol: {
-      fontSize: "5.5rem",
-      lineHeight: 1,
-      margin: "0.25rem 0 1rem 0",
-      color: "#fff",
-      textShadow: "0 6px 18px rgba(0,0,0,0.6)",
-    },
-    input: {
-      // lo hacemos pequeño/invisible pero enfocable
-      opacity: 0,
-      height: 0,
-      width: 0,
-      position: "absolute" as const,
-      left: "-9999px",
-    },
-    romaji: {
-      fontSize: "1.6rem",
-      marginTop: "0.75rem",
-      display: "flex",
-      justifyContent: "center",
-      gap: "0.6rem",
-      flexWrap: "wrap" as const,
-      color: "#fff",
-    },
-    letter: {
-      minWidth: "1.2rem",
-      fontSize: "1.6rem",
-      padding: "2px 6px",
-      borderRadius: "6px",
-      background: "rgba(255,255,255,0.03)",
-      display: "inline-block",
-    },
-    letterCorrect: {
-      color: "#0f0",
-      background: "rgba(0,255,0,0.06)",
-      border: "1px solid rgba(0,255,0,0.12)",
-    },
-    letterWrong: {
-      color: "#ff6b6b",
-      background: "rgba(255,0,0,0.04)",
-      border: "1px solid rgba(255,0,0,0.08)",
-    },
-    actions: {
-      marginTop: "1.25rem",
-      display: "flex",
-      gap: "0.6rem",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  };
-
-  // ===== Render =====
-  if (filteredData.length === 0) {
+  /* ---------------- Render ---------------- */
+  if (!filteredData.length) {
     return (
-      <div style={styles.noSymbols}>
+      <div className="japanese-game__empty">
         <h2>No symbols found for this group and script.</h2>
         <Button onClick={() => navigate(-1)}>Go Back</Button>
       </div>
     );
   }
 
-  if (!currentSymbol) return <p style={{ color: "#fff", textAlign: "center" }}>Loading...</p>;
+  if (!currentSymbol) {
+    return <p style={{ color: "#fff", textAlign: "center" }}>Loading...</p>;
+  }
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.header}>
+    <div className="japanese-game">
+      <h2
+        className="japanese-game__title"
+        style={{ display: keyboardVisible ? "none" : "block" }}
+      >
         Script: {script} | Group: {group}
       </h2>
 
-      <div style={styles.symbol}>{currentSymbol.symbol}</div>
+      <div className="japanese-game__symbol">{currentSymbol.symbol}</div>
 
       <input
         ref={inputRef}
         type="text"
         onKeyDown={handleKeyDown}
-        style={styles.input}
-        autoFocus
+        className="japanese-game__input"
         autoComplete="off"
-        inputMode="text"
+        autoCorrect="off"
+        autoCapitalize="none"
       />
 
-      <div style={styles.romaji}>
+      <div className="japanese-game__romanization">
         {currentSymbol.romaji.split("").map((letter, index) => {
           const userLetter = inputLetters[index];
-          const base = { ...styles.letter };
-          const finalStyle =
-            userLetter === undefined
-              ? base
-              : userLetter === letter.toLowerCase()
-              ? { ...base, ...styles.letterCorrect }
-              : { ...base, ...styles.letterWrong };
-
+          let letterClass = "japanese-game__letter";
+          if (userLetter !== undefined) {
+            letterClass += userLetter === letter
+              ? " japanese-game__letter--correct"
+              : " japanese-game__letter--wrong";
+          }
           return (
-            <span key={index} style={finalStyle}>
+            <span key={index} className={letterClass}>
               {userLetter ?? "_"}
             </span>
           );
         })}
       </div>
 
-      <div style={styles.actions}>
+      <div className="japanese-game__actions">
         <Button onClick={() => navigate(-1)}>Exit</Button>
         <HintButton hint={currentSymbol.romaji} inputRef={inputRef} />
       </div>
